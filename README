@@ -1,0 +1,20 @@
+ffhevc is a small shell script for encoding to H.265/HEVC video
+using ffmpeg and the libx265 library. I wrote it for my own use
+as there are some cases where my h264enc script has issues encoding
+some Blu-ray remuxes.
+
+Features:
+
+An up-to-date list of the supported features is available on the
+website of ffhevc
+
+https://ffhevc.teambelgium.net
+
+Parameters:
+
+Run 'ffhevc -h' in a console to see a list of supported parameters
+or read the man page (man ffhevc).
+
+Donations:
+
+PayPal address: neutrino8@gmail.com

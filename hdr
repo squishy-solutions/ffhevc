@@ -1,0 +1,23 @@
+#!/bin/bash
+# Small script to get HDR values which can
+# be fed to ffhevc's HDR options menu
+
+test -z "$1" && echo "Usage: hdr <file>" && exit 1
+
+FILE="$(realpath -e "$1")"
+
+hdrfile="/tmp/hdr$$"
+
+ffprobe -i "$FILE" -v quiet -select_streams v:0 -show_entries side_data -read_intervals %+1 > "$hdrfile"
+
+sdarray=([0]=green_x [1]=green_y [2]=blue_x [3]=blue_y [4]=red_x [5]=red_y [6]=white_point_x [7]=white_point_y [8]=min_luminance [9]=max_luminance [10]=max_content [11]=max_average)
+
+for i in {0..11}; do
+	hdr[i]="$(grep "^${sdarray[i]}" "$hdrfile" | tail -1 | awk -F= '{print $2}' | awk -F/ '{print $1}')"
+	test -z "${hdr[i]}" && hdr[i]="ENOT_AVAIL"
+done
+
+echo "-> master-display: G(${hdr[0]},${hdr[1]})B(${hdr[2]},${hdr[3]})R(${hdr[4]},${hdr[5]})WP(${hdr[6]},${hdr[7]})L(${hdr[9]},${hdr[8]})"
+echo "-> max-cll: ${hdr[10]},${hdr[11]}"
+
+rm -f "$hdrfile"

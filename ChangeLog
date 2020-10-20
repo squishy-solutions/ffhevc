@@ -1,0 +1,1223 @@
+2020-10-05 - ffhevc 4.3.3
+	* Fixed an issue in default encoding option where
+	  using a CTU of 64 can cause visual distortion when
+	  using rskip=2 (edge density). Workaround is to use
+	  a CTU of 32 and qg-size of 32
+
+2020-10-03 - ffhevc 4.3.2
+	* Lower edge density recursion skip to 3%
+	* Lower RC lookahead to 80
+	* Lower subme from 5 to 4
+
+2020-07-13 - ffhevc 4.3.1
+	* Enable tskip and hme in default encoding options
+	* Merge mp4 audio support with ts/m2ts/mts
+	  in the case statement for additional
+	  container formats
+	* Removed not in use, commented out code
+	* Lower default AAC audio bitrate from 448 to
+	  384 kbps
+
+2020-07-04 - ffhevc 4.3.0
+	* Switch to rskip mode 2 (edge density). Should
+	  prevent onion artifacts and speed up encoding a bit
+
+2020-06-21 - ffhevc 4.2.9
+	* Fixed a bug that prevents using TrueHD mono audio
+	  in the MP4 container
+
+2020-06-16 - ffhevc 4.2.8
+	* Support TrueHD audio in the MP4 container
+	* Lower max-merge from 4 to 2
+
+2020-04-25 - ffhevc 4.2.7
+	* Update default encoding options
+
+2020-03-27 - ffhevc 4.2.6
+	* Check for MPlayer only if AUTOCROP is enabled
+
+2020-03-23 - ffhevc 4.2.5
+	* Add -max_muxing_queue_size switch to workaround
+	  possible issues when muxing Atmos/DTS-X audio
+
+2020-03-22 - ffhevc 4.2.4
+	* Bugfix: -c used instead of -ac for audio channels
+
+2020-03-21 - ffhevc 4.2.3
+	* Update default encoding options
+
+2020-03-05 - ffhevc 4.2.2
+	* Go back to FFmpeg for crop detection
+
+2020-02-23 - ffhevc 4.2.1
+	* Use MPlayer for crop detection instead of FFmpeg which
+	  seems to have issues with 4k/UHD content
+
+2020-01-16 - ffhevc 4.2.0
+	* Minor optimizations to the default encoding options.
+	  Lower qcomp to 0.7
+
+2020-01-08 - ffhevc 4.1.9
+	* Rename hdr option to hdr10. Requires latest libx265
+	  compiled from the default branch
+	* Rename hdr-opt to hdr10-opt. Requires latest libx265
+	  compiled from the default branch
+	* Support HLG (Hybrid Log Gamma) HDR
+	* Some minor psy-rd/rdoq tunings
+
+2020-01-04 - ffhevc 4.1.8
+	* More psycho-visual tunings
+
+2020-01-03 - ffhevc 4.1.7
+	* Add option to force signaling of HDR in case max-cll
+	  is 0,0
+
+2019-12-31 - ffhevc 4.1.6
+	* Go back to uniform AQ (mode 1) with a strength of 1.0
+	* Bump up qcomp to 0.72
+	* Increase psy-rdoq to 15.0 and psy-rd to 4.0
+	* Increase reference frames to 5
+	
+2019-12-31 - ffhevc 4.1.5
+	* psy-rd/psy-rdoq psycho-visual tuning to the default
+	  encoding options. Aim is to preserve the energy of the
+	  input as much as possible without introducing noticable
+	  artifacts such as ringing
+
+2019-12-28 - ffhevc 4.1.4
+	* Add support for the noise video filter. Can be beneficial
+	  on (very) clean sources by applying some noise to avoid
+	  things like color/light banding in the encode
+	* Fine-tuning to the default encoding options
+
+2019-12-25 - ffhevc 4.1.3
+	* More fine-tuning to the default encoding options
+	  that should preserve noise and especially mosquito
+	  noise on dark backgrounds while at the same time
+	  increasing quality with a slightly higher bitrate
+	  cost
+
+2019-12-24 - ffhevc 4.1.2
+	* Increase deblocking values from -3,-3 to -1,-1
+	* Enable strong intra smoothing
+	* Lower qcomp to its default value of 0.6
+
+2019-12-24 - ffhevc 4.1.1
+	* Switch to AQ mode 2
+	* Increase default bframes from 6 to 8
+	* Keep quantization group size at the same size as
+	  the max CTU
+
+2019-12-23 - ffhevc 4.1.0
+	* Default encoding options tweaks. Add qcomp=0.7 and
+	  go back to standard non-hierarchical motion estimation.
+	  Also increased tu-{inter,intra}-depth to 4 and reference
+	  frames to 5
+	* Lower default CRF value to 20
+
+2019-12-19 - ffhevc 4.0.9
+	* Update default encoding options, v3
+
+2019-12-14 - ffhevc 4.0.8
+	* Update default encoding options and CRF value; V2
+
+2019-12-14 - ffhevc 4.0.7
+	* Update default encoding options and CRF value
+
+2019-12-12 - ffhevc 4.0.6
+	* Update the default encoding options
+	
+2019-11-11 - ffhevc 4.0.5
+	* Added support for the (newer) deblock filter
+
+2019-11-04 - ffhevc 4.0.4
+	* Bugfix: Using ADPCM encoding for DTS audio wasn't possible due
+	  to wrong variable used in the if conditional
+
+2019-11-02 - ffhevc 4.0.3
+	* Merged two case statements in the metadata code for mkv/mp4/mov
+	* Support dithering when downscaling to 8-bit pixels
+
+2019-10-29 - ffhevc 4.0.2
+	* Removed an unneeded check for audio codec in the conerror_func()
+	  function
+	* Removed a stale "" in the case statement that checks the channels
+	  for AC3
+	* Support setting the matrixed stereo type when resampling stereo
+	  input
+	* Support setting the filter type of the audio resample filter
+	* Add the bsf bitstream filter to convert from length prefix
+	  to start code prefix when remuxing to m2ts/mts/ts
+	* Cosmetics
+	
+2019-10-28 - ffhevc 4.0.1
+	* Added support for director/cast metadata for MP4/MOV
+	* Added +use_metadata_tags to the $movflags variable for MP4/MOV
+	* Support ADPCM encoding for DTS audio
+	* Fixed an issue where asking for director/cast occured multiple
+	  times if remuxing to other containers was enabled
+
+2019-10-27 - ffhevc 4.0.0
+	* Use 16 bits as bit depth metadata when encoding to TrueHD audio
+	* Removed an unneeded if conditional in the audio bit depth code
+	* Add director and cast metadata for the MKV container
+	* Reorder some code for the output shell file
+	* Cosmetics
+
+2019-10-26 - ffhevc 3.9.9
+	* Renamed audio variable aid[i] to aidx[i] and moved it outside
+	  of the if conditional that decides the audio codec. This
+	  removes the same code in three places and now uses the
+	  global aidx[i] variable
+	* HE-AACv2 only supports 2 channels. Update the audio code
+	  to reflect that
+	* When running in batch mode, add a warning about automatic
+	  audio metadata and offer an option to enable/disable it
+	* Added -tmp option to MP4Box to store temp files in the
+	  output directory
+	* Some minor improvements to the audio options
+
+2019-10-25 - ffhevc 3.9.8
+	* Removed M4V from the case statements for cover art.
+	  I confused it with ffx264 which supports M4V while
+	  ffhevc does not.
+	* Detect audio bit depth and add it to the audio metadata
+	* Added detection for DTS Express and DTS-HD HR for audio copy
+	* Use -show_entries instead of -show_streams for detecting
+	  audio properties with ffprobe. Removes piping to grep and awk
+	* Support setting the FLAC bit depth for encoding
+	* Minor restructuring and variables renaming in the audio code
+	* Updated the man page
+
+2019-10-24 - ffhevc 3.9.7
+	* Bugfix: cover art was not enabled for the M4V container
+
+2019-10-23 - ffhevc 3.9.6
+	* Added support for setting the VBV maxrate and buffer size
+	* Set default audio codec based on output container format
+	* Add colr option for MP4Box to the video_colorspace_func()
+	  function and the color primaries code. Only used for MOV
+	* Add -color_primaries, -color_trc and -colorspace to the
+	  FFmpeg command line options
+
+2019-10-22 - ffhevc 3.9.5
+	* Add support for SRT/SSA/AAS subtitles for the MOV container
+	* Add color characteristics to MP4Box if output is MOV
+	* Use smpte170m for option 0 in the color primaries code
+	* Update colormatrix in the video_colorspace_func() function
+	  to smpte170m for NTSC
+	* Some code optimizations
+
+2019-10-21 - ffhevc 3.9.4
+	* Renamed variables $MDATA and $CHPS to $METADATA
+	  and $CHAPS
+	* Add $METADATA and $CHAPS to the remuxing code
+
+2019-10-21 - ffhevc 3.9.3
+	* Add support for verbose logging to a log file
+	* Bugfix: -map_metadata and -map_chapters where not set
+	  to 0 when the respective options in the config file
+	  were set to "y"
+
+2019-10-20 - ffhevc 3.9.2
+	* Added support for embedding of SRT/SSA/ASS subtitles
+	  in the MP4 container
+	* Moved back to MP4Box for adding cover art to MP4/MOV.
+	  Apparently, after lots of testing, atomicparsley
+	  creates files that hang during playback
+	* Cosmetics
+	* Updated the man page
+
+2019-10-19 - ffhevc 3.9.1
+	* Use atomicparsley to add cover art for the mp4/m4v
+	  containers. This removes dependence on MP4Box and
+	  makes it possible to copy over metadata info in
+	  an easy way
+	* Add +frag_keyframe to the -movflags option when
+	  output is mp4
+	* Renamed variable METACOVER to MKVCOVER
+	* Updated the man page
+
+2019-10-18 - ffhevc 3.9.0
+	* Bugfix: use correct video track for crop
+	  preview with MPlayer
+	* Renamed variable SCAN_MULTIPLE_VID_TRACKS to
+	  SCAN_MULTI_VID_TRACKS
+	* Some reordering in the config file
+	* Add option hrd and vui-hrd-info when encoding
+	  HDR video
+	* Add LPCM detection for audio copy
+	* Add support for cover art for the mp4 and mov
+	  containers. Requires MP4Box from GPAC
+	* Set Catmull-Rom as default Bicubic/Spline tuning
+	* Some code optimization
+
+2019-10-16 - ffhevc 3.8.9
+	* Support the fftdnoiz denoise filter
+
+2019-10-15 - ffhevc 3.8.8
+	* Bugfix: use correct video mapping for crop detection
+	* Cosmetics
+
+2019-10-14 - ffhevc 3.8.7
+	* Support scanning for multiple video tracks
+	  in the input file
+
+2019-10-13 - ffhevc 3.8.6
+	* Fixed a typo in the keyframe code
+	* Use readlink -e and realpath -e where needed
+	* Updated default encoding options and CRF value
+	* Updated the preset.txt example file
+	
+2019-10-11 - ffhevc 3.8.5
+	* Support hardcoding external or embedded subtitles.
+	  Requires libass support in FFmpeg
+	* Fixed a typo in the subtitles code
+
+2019-09-25 - ffhevc 3.8.4
+	* Revert using audindex[i] var for audio metadata
+	  detection
+	  
+2019-09-25 - ffhevc 3.8.3
+	* Use the audindex[i] variable for audio metadata
+	  during audio copy
+	* Updated default encoding options. Requires latest
+	  x265 from git
+	* Updated default audio bitrates for some codecs
+
+2019-09-22 - ffhevc 3.8.2
+	* For audio stream copy, in case ffprobe reports
+	  channels layout as unknown, try to guess the
+	  amount of channels based on channel detection
+	  and use that as metadata
+	* Set Mobius transform as default for HDR to SDR
+	* Updated the man page
+
+2019-09-21 - ffhevc 3.8.1
+	* Add side channel info to the audio metadata
+
+2019-09-19 - ffhevc 3.8.0
+	* Support encoding to WMAv1 and WMAv2 audio
+	* Update high bit depth pixel formats options
+	* Add WMAv1 and WMAv2 audio detection metadata
+	  when doing audio copy
+
+2019-09-18 - ffhevc 3.7.9
+	* Improvements to the audio copy metadata
+
+2019-09-13 - ffhevc 3.7.8
+	* Add audio channel metadata when using audio copy
+
+2019-09-05 - ffhevc 3.7.7
+	* Code optimization in the audio sample rate metadata
+	
+2019-08-29 - ffhevc 3.7.6
+	* Use a comma instead of a dash for the audio sample
+	  rate metadata
+
+2019-08-21 - ffhevc 3.7.5
+	* Add audio sample rate to the audio metadata
+	* Fixed a bug in the audio resample code where
+	  sample rate wasn't detected due to wrong value
+	  used (bit_rate instead of sample_rate)
+
+2019-08-05 - ffhevc 3.7.4
+	* Update default encoding options v2
+
+2019-08-03 - ffhevc 3.7.3
+	* Update default encoding options
+
+2019-07-23 - ffhevc 3.7.2
+	* Added support for crop preview using MPlayer when
+	  autocrop is enabled in the config file. This was
+	  ported over from my h264enc script
+
+2019-07-12 - ffhevc 3.7.1
+	* Updated the default encoding params. Added the new
+	  hme (hierarchical motion search) and hme-search
+	  options. Also lowered rd to 4 and increased subme
+	  to 4. To use hme, the latest x265 from git is required
+
+2019-06-13 - ffhevc 3.7.0
+	* Added support for the bm3d denoise filter
+	
+2019-03-02 - ffhevc 3.6.9
+	* Add HDR_SUPPORT option to config file for making HDR
+	  support optional
+	  
+2019-01-12 - ffhevc 3.6.8
+	* Set Open GOP to 0 and repeat headers to 1 when Dolby Vision is used
+	
+2019-01-11 - ffhevc 3.6.7
+	* Check if tonemap is used and if so, disable Dolby Vision
+	  questions
+
+2019-01-10 - ffhevc 3.6.6
+	* Support Dolby Vision HDR
+
+2018-12-22 - ffhevc 3.6.5
+	* Add the new tune animation option
+	* Updated the man page
+
+2018-07-10 - ffhevc 3.6.4
+	* Revert previous change. Linear transfer is already set
+	  in the $tonemap variable
+
+2018-07-09 - ffhevc 3.6.3
+	* HDR to SDR: transfer to linear light before doing bt2020-10/12
+	  transfer
+	  
+2018-04-15 - ffhevc 3.6.2
+	* Support setting the chroma location parameter
+	
+2018-03-20 - ffhevc 3.6.1
+	* Support 12-bits in the pixel format function
+	* Improvements to the HDR to SDR conversion code, copy color
+	  characteristics option
+	* A few typo fixes
+	
+2018-02-24 - ffhevc 3.6.0
+	* Set the eq saturation default value to 1.0 (same as filter default)
+	* Add the colorspace and colormatrix filters when doing an HDR
+	  to SDR conversion
+	* Lower tonemap desat strength to 2.8
+	* Support white point adaptation for HDR to SDR
+	* Moved the colorspace filter after the scale one
+	* Moved the pixel format filter near the end of the filter chain
+	
+2018-02-22 - ffhevc 3.5.9
+	* Support per-file HDR side data when running in batch mode
+	* Minor code optimizations
+	
+2018-02-17 - ffhevc 3.5.8
+	* Fixed an issue where in some cases write-testing the output
+	  directory will fail due usage of readlink -f instead of
+	  readlink -m
+	* Small code optimizations
+	
+2018-02-16 - ffhevc 3.5.7
+	* Implemented HDR side data scanning
+	* Rewrote the hdr script
+	
+2018-02-16 - ffhevc 3.5.6
+	* Replace an ffprobe log level occurance of -v error to -v quiet
+	* Added a small script called "hdr" to get HDR values from a file
+	  which then can be used in ffhevc's HDR options menu
+
+2018-02-07 - ffhevc 3.5.5
+	* Update transfer chars to support latest changes to zimg from git
+	
+2018-01-08 - ffhevc 3.5.4
+	* Fixed a possible devision by 0 that may occur when one copies
+	  audio and the bitrate for metadata is reported as N/A by ffprobe
+	  
+2018-01-06 - ffhevc 3.5.3
+	* Moved the eq filter to almost the end of the video filter chain
+	  as it can lead to banding in certain cases in case the filter
+	  is in front of most other ones
+	* If the eq filter is used, also insert the format one after it
+	  if a pixel format has been chosen
+	
+2018-01-04 - ffhevc 3.5.2
+	* Support tweaking the tonemap algorithms for HDR to SDR conversion
+	* Increased default desat tonemap value from 2.3 to 4.2
+	* Support applying color saturation correction when doing an HDR
+	  to SDR conversion
+	* Added bt2020-12 to the list of transfers when doing color
+	  characteristics copy
+	* Updated the HDR_to_SDR_instructions.txt file
+	
+2018-01-03 - ffhevc 3.5.1
+	* Don't hardcode the desaturation strength of the tonemap filter
+	  but let is be an option
+	* Removed the matrix and primaries options in the zscale filter
+	  as it leads to over-saturation of colors
+	  
+2018-01-02 - ffhevc 3.5.0
+	* Disabled audio metadata for batch mode when using audio copy,
+	  until I figure out how to do it in a decent way
+	* Removed default software scaler parameters for bicubic/spline
+	  They are already the default in FFmpeg so no need to force
+	  them
+	* Use a case statement instead of if condition in option 0 of
+	  the video_hdr_to_sdr_func() function
+	  
+2018-01-01 - ffhevc 3.4.9
+	* Set proper zscale transfer value in the video_hdr_to_sdr_func()
+	  function, option 0 (copy color characteristics)
+	* Use a desat value of 2.5 for the tonemap filter when doing HDR
+	  to SDR conversions
+	* Don't use pix_fmts in the format filter. It is not really needed
+	* Removed 12-bit options from the video_pixfmt_func() function
+	* Cosmetics
+	  
+2018-01-01 - ffhevc 3.4.8
+	* Reworked the video_chars_func() function and added reporting
+	  of video bit depth
+	* Initial support for audio codec metadata when doing audio
+	  copy
+	* Increased default E-AC-3 audio bitrate from 768 to 960 kbps
+	* Set dialnorm for AC-3/E-AC-3 to its FFmpeg default (-31)
+	* Added HDR_to_SDR_instructions.txt file to the package
+	* Cosmetics
+	  
+2017-12-27 - ffhevc 3.4.7
+	* Renamed array variable CHARS to VCHARS in the
+	  video_chars_func() function
+	* Report pixel format in the video_chars_func() function
+	* Don't show HDR options if doing an HDR to SDR conversion
+	* Use -v quiet instead of -v error log level for ffprobe
+	* Cosmetics
+	  
+2017-12-25 - ffhevc 3.4.6
+	* Initial support for HDR to SDR conversions. Requires
+	  FFmpeg to be compiled with the zimg library as it
+	  needs the zscale filter
+	  https://github.com/sekrit-twc/zimg
+	  
+2017-11-28 - ffhevc 3.4.5
+	* Disable Open GOP and enable header repeating when HDR
+	  options are enabled like master display and max-cll
+	  
+2017-11-17 - ffhevc 3.4.4
+	* Update transfer characteristics: smpte-st-2084 -> smpte2084
+	  Requires latest x265
+	  
+2017-10-22 - ffhevc 3.4.3
+	* Support dialog level normalization for AC3/EAC3 audio
+	
+2017-09-29 - ffhevc 3.4.2
+	* Support setting the output video aspect ratio
+	
+2017-08-23 - ffhevc 3.4.1
+	* Support full chroma input for the software scaler
+	
+2017-07-20 - ffhevc 3.4.0
+	* Bugfix: use realpath instead of readlink for the OUTPUT
+	  var when running in batch mode. Fixes the issue where
+	  readlink will follow the full path in case the input
+	  is a symlink which may result of encoding files we
+	  were not asked to
+	* Don't print cropped resolution during runtime
+	  if batch mode is selected
+	* Remove check for realpath. It is now required and not
+	  optional
+
+2017-07-11 - ffhevc 3.3.9
+	* Support setting the min/max keyframe/IDR intervals
+
+2017-06-14 - ffhevc 3.3.8
+	* Make software scaler tweaking optional
+	* Added support for the unsharp filter for sharpen/blur
+	* Use a colon symbol as separation for input/output color range
+	  in the video_colorspace_func() function as to be consistent
+	  with the other options. Also set the default to tv:tv
+	
+2017-06-13 - ffhevc 3.3.7
+	* Bugfix in the video_colorspace_func() function. Wrong value
+	  used for the ispace option of the filter. Must be bt2020ncl
+	  instead of just bt2020
+
+2017-06-11 - ffhevc 3.3.6
+	* Bugfix: master-display option must be enclosed in quotes to not
+	  confuse Bash
+	
+2017-06-10 - ffhevc 3.3.5
+	* Replace numbers in array variable char of the video_chars_func()
+	  function with the ones from the for loop
+	* Pipe the ffprobe string to tail -1 to work around issues
+	  with some problematic files
+	* Some small improvements to the video_colorspace_func() function
+	  
+2017-06-09 - ffhevc 3.3.4
+	* New function, video_chars_func(), to detect and display video
+	  characteristics like color range/space/transfer/primaries
+	* Detect and display video resolution if video scaling is enabled
+	* Detect and display pixel format
+	
+2017-06-08 - ffhevc 3.3.3
+	* Report software scaler set in the config file
+	* Merge the bicubic and spline scaler tuning code
+	* Mention for the Lanczos scaler that the scaler
+	  tuning value is the filter length and not sharpness
+	
+2017-06-05 - ffhevc 3.3.2
+	* Remove redundant software scaler warning and exit in
+	  the sws_func() function for the config file
+	* Added support for the experimental software scaler
+	* Lower psy-rdoq from 2.5 to 1.5 and psy-rd from 2.5 to
+	  2.0 to eliminate ringing artifacts
+	* No need to enclose the values of max-cll in quotes
+	* Removed additional encoder info on max audio channels support
+	* Added support for software scaler tuning where applicable
+	* Added example JSON file for Dynamic HDR10+ to the
+	  package
+	* Updated the Makefile
+	
+2017-06-04 - ffhevc 3.3.1
+	* Further optimizations to the default encoding options
+	* Match software scaler options in config file with the
+	  ones inside the script. $SCALER in config file now
+	  takes a value between 0 and 9
+	* Do some basic checking of scaler option when it's set
+	  in the config file
+	
+2017-06-01 - ffhevc 3.3.0
+	* Simplify the scale variable a bit
+	* Support SMPTE170M colorspace conversion
+	* Support SMPTE170M for color primaries/matrices/transfers
+	
+2019-05-30 - ffhevc 3.2.9
+	* Bugfix: use an if conditional to set hdr-opt option
+	* Increase default CRF value to 21
+	* Tune the default encoding parameters
+	
+2017-05-29 - ffhevc 3.2.8
+	* Added support for Dynamic HDR10+ JSON files. Requires
+	  libx265 to be compiled with Dynamic HDR10+ support
+	
+2017-05-16 - ffhevc 3.2.7
+	* Added support for FFmpeg's internal Opus audio encoder
+	
+2017-05-14 - ffhevc 3.2.6
+	* Bugfix in the software scale code. Use an if conditional
+	  to check for an y/n answer
+
+2017-05-13 - ffhevc 3.2.5
+	* Support accurate rounding for the software scalers
+	* Support full chroma interpolation for the software scalers
+	* Use the flags option of the scale option instead of -sws_flags
+	  to set scaler and its options
+	  
+2017-04-03 - ffhevc 3.2.4
+	* Support setting the input/output color range
+	
+2017-03-28 - ffhevc 3.2.3
+	* Update to the default encoding options
+	
+2017-03-18 - ffhevc 3.2.2
+	* Update colorspace entry for NTSC video
+	* Fixed bug in the video_colorspace_func() values
+	
+2017-03-06 - ffhevc 3.2.1
+	* Update audio compression level values
+	* Initial support for HDR VUI signaling
+	
+2017-02-22 - ffhevc 3.2.0
+	* Support high FPS -> low FPS conversions
+	* Bugfix: missing options in FPS conversion menu
+	
+2017-02-06 - ffhevc 3.1.9
+	* Support the framestep filter for FPS conversion
+	* Support halving the frame rate. Only supported for
+	  50/59.940/60 FPS input
+	  
+2017-01-25 - ffhevc 3.1.8
+	* Small improvement: add "Track $i:" to the question for
+	  audio channel layout
+	  
+2017-01-24 - ffhevc 3.1.7
+	* Removed one of the OUTPUT variables for batch mode. It is
+	  no longer needed
+	* Rewrote the audio channel layout code. It is now based on
+	  per-codec encoder support
+	* Repositioned the audio channel checking code
+	  
+2017-01-20 - ffhevc 3.1.6
+	* Fixed a small issue in the output for batch mode
+	
+2017-01-18 - ffhevc 3.1.5
+	* Check channel amount for the libfdk_aac encoder and warn and
+	  exit on 7 channels as it doesn't support it
+	* Use range=tv instead of range=mpeg for the color conversion
+	  filter
+	* Bugfix: return value of variable autocrop wasn't checked
+	  when running in batch mode resulting in always cropping
+	  the input files
+	* Bugfix in the $OUTPUT variable when running in batch mode
+	* Removed readlink from the batch mode variables as it's no
+	  longer needed
+	  
+2017-01-15 - ffhevc 3.1.4
+	* Support ALAC audio encoding
+	* Some small improvements to the audio code
+	* A few variable renamings, mostly in the case statements
+	
+2017-01-13 - ffhevc 3.1.3
+	* Support 50 <-> 60/59.940 FPS conversions
+	* Use upper-case words for the color primaries/transfers/matrices
+	  and pixel formats
+	* Support 4.0 audio channel layout in addition to Quad
+	
+2017-01-12 - ffhevc 3.1.2
+	* Added support for pixel format conversion
+	* Added support for colorspace conversion
+	
+2017-01-09 - ffhevc 3.1.1
+	* Fix a possible issue when detecting the FPS value that occurs
+	  with some files
+	* Expand directory path internally instead of exporting the
+	  dirname command to the file that gets sourced for encoding
+	* Use 'bc' for calculating the detected FPS value
+	* Only use fractions internally for FPS values. The user should
+	  be presented with the floating point value
+	
+2017-01-08 - ffhevc 3.1.0
+	* Support SMPTE-ST-2084 transfer characteristics
+	* Placed the video post-processing filters in their own sub-menu
+	* Some small changes to the FPS conversion code
+	
+2017-01-06 - ffhevc 3.0.9
+	* Bugfix: default output directory wasn't made when running
+	  in batch mode
+	* Display found per-file crop values when running in batch mode
+	
+2017-01-05 - ffhevc 3.0.8
+	* Support per-file auto-cropping when running in batch mode
+	* Use internally full paths for input and output
+	* Add a test case for output directory to the script that gets
+	  sourced for encoding
+	
+2017-01-04 - ffhevc 3.0.7
+	* Use readlink to get the full path to the cover art image. Fixes
+	  an issue when running in batch mode
+	
+2016-12-02 - ffhevc 3.0.6
+	* Merged the output code for the batch mode with that for single
+	  file input
+	* Fixed an issue where remuxing to MP4 may fail in case the user
+	  chooses FLAC audio
+	* Renamed variable $extracon to $remuxcon and $econ to $rcon
+	* Made strict option "global" so I won't have to worry about
+	  adding experimental audio codecs support in the future
+	* Clean ups to the FPS conversion menu
+	  
+2016-11-23 - ffhevc 3.0.5
+	* Added support for FLAC audio in MP4. Requires a very recent
+	  ffmpeg version
+	* Added the $strict variable to the remuxing code
+	* Use the improved way of gathering info for the audio sample
+	  rate detection
+	* Added the ability to flag the first internal or external
+	  subtitle as default, when using the option for internal and
+	  external subtitle copying
+	* Added support for LD-AAC audio encoding with libfdk-aac
+	* Removed stderr to stdout redirection (2>&1) for some of the
+	  ffprobe lines. It is no longer needed
+	  
+2016-11-20 - ffhevc 3.0.4
+	* Moved checks for supported containers into its own function,
+	  check_container_func()
+	* Improvements to gathering information about the input file.
+	  Saves us piping to sed and in some cases piping to awk and tail
+	* Removed the NOSOUND option since the user can specify 0 for
+	  amount of audio tracks which equals to encoding with the NOSOUND
+	  option
+	* Placed both subcopy and subcpy variables into a single subparams
+	  variable. This also removes the NOSUBS variable
+	* Placed the video length detection code into its own function,
+	  video_length_func(), as it is used in two places so we can
+	  save writing the same stuff twice
+	* Instead of skipping bitrate calc for target file size in case
+	  we can't detect the video length, ask the user to provide it
+	* Removed install script and added a Makefile for installation
+	* Added new INSTALL file with install/uninstall instructions
+	  
+2016-11-18 - ffhevc 3.0.3
+	* Use process number instead of .old when renaming existing files
+	* Added support for detelecining (IVTC). Bumps up config file
+	  version to 33
+	* Minor improvements to the cropping code
+	
+2016-11-16 - ffhevc 3.0.2
+	* Added support for 3-pass encoding
+	* Added support for setting a default audio codec in the config
+	  file. Bumps up config file version to 32
+	* Moved setting the video bitrate before the video filters
+	* More variables renamings and other small code tweaks
+	* Do some checking on duplicate entries when using additional
+	  containers and warn and exit
+	* Updated the man page
+	
+2016-11-14 - ffhevc 3.0.1
+	* Set default amount of subtitles to 1 instead of exiting when no
+	  value is given
+	* Allow the user to choose the amount of audio tracks he wants at
+	  run time instead of requiring it to be set in the config file.
+	  This removes config file var MAX_AUD_TRACKS and bumps up version
+	  to 31
+	* Renamed array variables audmapval and submapval to audindex and
+	  subindex since we're not mapping but specifying the audio/sub
+	  index id with these vars
+	* Fixed a possible case where audio params weren't cleared in
+	  case the nosound option was chosen
+	* Removed an if conditional checking for MAX_SUBS which no longer
+	  is used
+	  
+2016-11-13 - ffhevc 3.0.0
+	* Added support for batch encoding mode, to be activated with the
+	  new -b option. It's used to encode directories with video files
+	* Renamed variable $mode to $encmode for clarity
+	* Reworked the input/output code
+	* Disabled strong-intra-smoothing in the default x265 options
+	  in the config file
+	* Instead of relying on a config var to set the subtitles amount
+	  to support, ask the user each time to provide it. Makes the
+	  code less complex and easier to extend in the future. Bumps up
+	  config file version to 30
+	* Check if the X265PARAMS var is missing from config in case we're
+	  not using an x265 preset
+	* Updated the man page
+	
+2016-11-12 - ffhevc 2.9.9
+	* Added support for importing external srt/ssa subtitles for the
+	  mkv, m2ts, mts and ts containers
+	* Moved the subtitle code into its own video_subtitles_func()
+	  function
+	* Added support for simultaneously copying subtitles from the
+	  input file and copying external ones
+	* Renamed variable SUBT to SUBNR for clarity
+	* Updated the README file and man page
+	  
+2016-11-10 - ffhevc 2.9.8
+	* Check if name of input file matches that of output file and warn
+	  and exit. Requires the realpath utility
+	* Added support for the m2ts, mts and ts containers
+	* Merged the code that checks if an audio codec is supported by a
+	  container with that that checks for additional output containers.
+	  Removes code duplication and maintainability
+	* Update to the audio sample rates. Sync them with ffmpeg -h encoder=<encoder>
+	* Restrict TrueHD channels to 2, 5 and 6 as that's what the encoder
+	  supports
+	* Updated the README file
+	
+2016-11-09 - ffhevc 2.9.7
+	* Renamed config var CON to CONFMT. Updates config file version to 29
+	* Reduced some duplication in the audio codec checks for the container
+	  formats
+	* Reduced some error message duplication when checking if an additional
+	  container supports an audio codec
+	* Rework to the additional container selection code
+	* Added color functions for the additional container conversion
+	* Added back support for the MOV container
+	
+2016-11-08 - ffhevc 2.9.6
+	* Added support for encoding to TrueHD audio. Requires a very recent
+	  ffmpeg version, preferably latest from git
+	* Some small improvements to the additional container output
+	* Moved the video_deinterlace_func() function inside the actual
+	  deinterlace code
+	* Update to the README file
+	* Update to the man page
+	
+2016-11-07 - ffhevc 2.9.5
+	* Cosmetics in the code for deinterlacing
+	* Instead of skipping FPS conversion if the FPS can't be detected,
+	  ask the user to provide it
+	* Use single brackets instead of double ones in the nosound
+	  setup code
+	* Added license snippet at the top of the script
+	* Added support for outputting to additional container formats
+	* Do some checking on supported audio codecs for the supported
+	  containers
+	* Check specified container and warn and exit if it's not supported
+	* Support setting the FLAC compression level
+	* Break out of the if conditionals in the audio code and replace
+	  them with two case statements
+	* Update to the README file
+	
+2016-11-06 - ffhevc 2.9.4
+	* Bugfix: resampling wasn't working for fdk-aac due to missing
+	  value in the case statement
+	* Check if output file exists and if so, move it to $file.old
+	* Use test directly instead of an if condition to set the audio
+	  filters
+	* Support bitrate calculations for target file size when doing
+	  audio copy
+	* Use fdk* in the case statements for easier typing
+	* Renamed variable astrm to astream for clarity
+	* Use [1-2]p in the case statements for passmodes instead of 1p|2p
+	* New function, video_field_parity_func(), to detect and report the
+	  interlace field order. Used by motion-compensation deinterlacing
+	  and interlaced encoding
+	* Detect and display audio sample rate in case resampling is chosen
+	* Improvements to the video_fps_func() function. Get the FPS value
+	  directly instead of outputting to a file and reading it
+	  
+2016-11-05 - ffhevc 2.9.3
+	* Use a single var, $ofps, to set the output FPS for both deinterlace
+	  bobbing and FPS conversion
+	* Use new $bob var to indicate that we do bobbing and use that
+	  var to disable FPS conversion
+	* Renamed $fp var in video_deinterlace_func() to $fpar
+	* Print a warning message that FPS conversion gets disabled if
+	  the user chooses audio copy
+	* Added support for the FDK-AAC audio codec. Requires ffmpeg
+	  to be compiled with libfdk-aac support
+	* Support FPS conversion with the 'fps' filter
+	* Some minor code optimizations
+	
+2016-11-04 - ffhevc 2.9.2
+	* Bugfix: the scale variable was used twice for different things
+	  causing an overwrite of the scale filter parameters, which
+	  eventually results in ffmpeg complaining and exiting
+	* Added support for NTSC <-> NTSC and NTSC <-> PAL frame rate
+	  conversions
+	* New var in config file, VID_FPS_CONVERT, to enable/disable
+	  FPS conversion. Bumps up config file version to 28
+	* Moved the FPS detection code into its own function so it can
+	  be easily reused
+	* Minor cosmetics
+	* Updated the README file
+	
+2016-11-03 - ffhevc 2.9.1
+	* Added support for interlace-aware encoding
+	* Added support for the spp, uspp and pp7 deblockers
+	* Support asking for software scaler during exec time
+	* Added new SCALE var to the config file to enable/disable
+	  support for software scaling. Bumps up the config file
+	  version to 27
+	* Do a test write to see if output directory is writable
+	  by the script executing user
+	* Updated the README file
+	
+2016-11-02 - ffhevc 2.9.0
+	* Added support for motion compensation deinterlacing for both
+	  deinterlacing at original FPS and bobbing
+	* Use denoise var instead of denoiser for the denoise filters
+	  and rotate var instead of transpose for the transpose filter
+	* Added support for deblocking with the fspp filter. This bumps
+	  up the config file version to 27
+	* Update to the README file
+	
+2016-11-01 - ffhevc 2.8.9
+	* Added support for bobbing (deinterlace at double FPS)
+	* Cosmetics: add menu header to the Color Primaries option
+	
+2016-10-11 - ffhevc 2.8.8
+	* Fix video rotation for 180°. Don't use transpose=0 and transpose=3
+	  as they cancel each others out
+	  
+2016-10-06 - ffhevc 2.8.7
+	* Audio channel layout 6.1(back) -> 6.1 and 7.1(wide-side) -> 7.1
+	* Cosmetics: add rotate filter menu banner
+	* Support 180° video rotating
+	
+2016-10-02 - ffhevc 2.8.6
+	* Allow volume setting when normalize is used
+	* Cosmetics: add header title to the sample rate options
+	* Bump up default video bitrate for 1/2-pass mode and
+	  AAC/Opus/Vorbis bitrates
+	* Simplify atadenoise options
+	
+2016-09-28 - ffhevc 2.8.5
+	* Added support for the atadenoise video filter
+	
+2016-09-18 - ffhevc 2.8.4
+	* Add undefined option to the color primaries and make it default
+	* Support asking for crop values if autocrop is disabled
+	* Made most audio/video filters optional by allowing to enable
+	  or disable a filter in the config file
+	* Use menu tables for the audio sample rates
+	* Cosmetics
+	
+2016-09-14 - ffhevc 2.8.3
+	* Removed stray, unneeded MPLAYERPARAMS from config file
+	* Don't set by default a color prim/matrix in the x264 options
+	  in the config file
+	* Added support for rotating with the transpose filter
+	* Support setting the color primaries/matrix/transfer
+	  
+2016-09-09 - ffhevc 2.8.2
+	* Adaptive channel range and defaults based on audio codec
+	* Made metadata comment optional, allow to modify it and
+	  place it in the config file
+	* Some minor tweaks
+	
+2016-09-06 - ffhevc 2.8.1
+	* Added support for the new vaguedenoiser filter. Requires
+	  latest ffmpeg from git
+	* Merged the mp3 audio code with the rest
+	* Auto-add a metadata comment
+	* Updated the README file
+	  
+2016-09-06 - ffhevc 2.8.0
+	* Replaced some simple if conditionals with test cases
+	* Don't encode audio during first pass of 2-pass mode
+	* Bugfix: fix audio copy
+	* Target file size calc does not work with FLAC, PCM or Copy
+	  so just skip it
+	* Reduced ffmpeg command line options duplication in the
+	  encoder_func() function
+	
+2016-09-05 - ffhevc 2.7.9
+	* Improved crop detection
+	* Removed dependence on MPlayer
+	* Added support for encoding to PCM audio
+	* Use ffprobe directly instead of outputting to files
+	* Updated the man page and README file
+	
+2016-09-02 - ffhevc 2.7.8
+	* Added support for multipass encoding, to be activated with the
+	  new -m option
+	* Added support for calculation of video bitrate for target file
+	  size when using bitrate-based encoding
+	* Replaced some simple if conditionals with test cases
+	* Updated the man page and README file
+	
+2016-09-02 - ffhevc 2.7.7
+	* Renamed config variable MAX_AUD_TRKS to MAX_AUD_TRACKS
+	* Removed -strict -2 option for AAC audio. It is no longer
+	  needed since about mid 2015
+	
+2016-08-23 - ffhevc 2.7.6
+	* Merged the AC3/EAC3 channel check
+	* Bumped up EAC3 default bitrate to 768 kbps
+	* Use none instead of metadata flag for disposition for
+	  subsequent subs/audio tracks
+	
+2016-08-20 - ffhevc 2.7.5
+	* NOSOUND audio option takes precedence so clear any other audio
+	  options given
+	* Workaround an ffmpeg disposition issue where in some cases it
+	  sets the default flag on all subsequent subs/audio tracks
+	* Bumped up default AAC bitrate
+	* Move the MOOV atom for MP4 files to the beginning of the file,
+	  for streaming-friendly files
+	* Enforce lower-case for container extension
+	* Added install script to the package
+	
+2016-08-20 - ffhevc 2.7.4
+	* Added support for E-AC-3 audio encoding
+	* Add title metadata to the video stream
+	
+2016-08-19 - ffhevc 2.7.3
+	* Increased the frames value for the crop detection code
+	* Added ogv to list of containers not supporting DTS
+	* Cosmetics
+	
+2016-08-18 - ffhevc 2.7.2
+	* Support asking for CRF value if it isn't set in the config file
+	* Support custom config files with using the x265 preset/tune profiles
+	* Minor code updates
+	* Updated the man page
+	
+2016-08-18 - ffhevc 2.7.1
+	* Added an EDITOR variable to the config file so the user can set
+	  his preferred editor for the -e option
+	* Added -r option to reset the config file to its defaults
+	* Cosmetics in the help info code
+	* Added man page
+	
+2016-08-17 - ffhevc 2.7.0
+	* Added support for custom preset files (loaded with the new -c option)
+	* Added an example custom preset file to the package
+	* Added support for editing the config file with the vi text editor,
+	  using the new -e option of ffhevc
+	* Updated the README file
+	
+2016-08-16 - ffhevc 2.6.9
+	* Switched to using getopts for parsing the options
+	* Added support for using x265 tune profiles
+	
+2016-08-16 - ffhevc 2.6.8
+	* Check the value of the astrm variable. This allows to properly
+	  remove any audio options in case no audio is detected
+	* Only display the audio codecs menu when audio has been detected
+	  or the user explicitly sets the track ID
+	
+2016-08-12 - ffhevc 2.6.7
+	* Set the first video/subtitle/audio track as default
+	
+2016-07-30 - ffhevc 2.6.6
+	* Update to the default encoding options
+	
+2016-07-03 - ffhevc 2.6.5
+	* Placed the supported audio codecs in a menu
+	* Updated the audio codecs default bitrates
+	
+2016-07-03 - ffhevc 2.6.4
+	* recursion-skip -> rskip to the default encoding options
+	
+2016-06-30 - ffhevc 2.6.3
+	* Added support for the built-in x265 presets
+	* Added a -h|--help option
+	* Tuning to the default encoding options v2
+	* Updated the README file
+	
+2016-06-29 - ffhevc 2.6.2
+	* Tuning to the default encoding options
+	
+2016-06-15 - ffhevc 2.6.1
+	* Added the MOV container to the list of containers that don't
+	  support DTS audio
+	* Made the audio volume filter optional
+	  
+2016-06-09 - ffhevc 2.6.0
+	* Warn and exit if user provides an unsupported image format
+	  for cover art
+	* Added support for nosound option to disable audio encoding
+	* Updated the README file
+	
+2016-06-07 - ffhevc 2.5.9
+	* Added support for cover art for the MKV container
+	
+2016-05-30 - ffhevc 2.5.8
+	* Support asking for container format if the CON variable is not set
+	  in the config file
+	* Warn and exit if user chooses MP4/M4V container and DTS audio
+	* Some minor code improvements
+	
+2016-05-27 - ffhevc 2.5.7
+	* Don't rm config file upon update. Just move it to .ffhevc.old
+	* Add audio bitrate metadata
+	
+2016-05-21 - ffhevc 2.5.6
+	* Add audio channel metadata
+	
+2016-05-16 - ffhevc 2.5.5
+	* Only use side channels for DTS encoder which doesn't support anything else
+	
+2016-03-29 - ffhevc 2.5.4
+	* Support setting the MPlayer options
+	* Minor tweaks to the default x265 encoding options
+	
+2015-12-19 - ffhevc 2.5.3
+	* Added support for audio normalization using the Dynamic Audio
+	  Normalizer filter
+	  
+2015-12-18 - ffhevc 2.5.2
+	* Add back using dB for the volume filter
+	
+2015-11-26 - ffhevc 2.5.1
+	* Default params performance inprovements. ONLY USE THIS VERSION
+	  IF YOU HAVE THE LATEST libx265
+	  
+2015-11-21 - ffhevc 2.5.0
+	* Don't use dB for the volume filter
+	
+2015-11-03 - ffhevc 2.4.9
+	* Made audio resampling optional
+	
+2015-11-03 - ffhevc 2.4.8
+	* Use a single var to set the audio filters, in preparation
+	 for possible future extensions
+	 
+2015-11-02 - ffhevc 2.4.7
+	* Use -filter:a:id aresample instead of -ar:a:id
+	
+2015-10-31 - ffhevc 2.4.6
+	* Added support for audio resampling
+	
+2015-10-04 - ffhevc 2.4.5
+	* Removed a test condition in the mp3 code that is not really needed
+	* Cosmetics in the audio code
+	* Added a counter
+	
+2015-09-19 - ffhevc 2.4.4
+	* Added support for encoding to MP3, Vorbis, FLAC and Opus audio
+	* Do some sanity checks for AC3/DTS channels
+	* Updated the README file
+	
+2015-09-18 - ffhevc 2.4.3
+	* Removed the workaround for DTS audio since we always use
+	  "5.1(side)" for 6 channels output
+	* Support setting the MAX_AUD_TRKS and MAX_SUBS variables in
+	  the config file to "auto". When set to "auto", it will
+	  ask for as many as detected audio tracks/subtitles
+	  
+2015-09-17 - ffhevc 2.4.2
+	* Small update to the channel layout mappings
+	
+2015-09-15 - ffhevc 2.4.1
+	* Added support for deinterlacing
+	* Updated the README file
+	
+2015-09-14 - ffhevc 2.4.0
+	* Fixed an issue where -vf was added despite not using any filters
+	
+2015-09-13 - ffhevc 2.3
+	* Added support for scaling
+	* Updated the README file
+	
+2015-09-12 - ffhevc 2.2
+	* Added audio channel layout mappings
+	
+2015-09-11 - ffhevc 2.1
+	* Update to the default libx265 encoding params
+	
+2015-09-10 - ffhevc 2.0
+	* Tweaks to the audio code
+	* Somehow I removed the chapters option. Add it back
+	
+2015-09-09 - ffhevc 1.9
+	* Removed the $ in the index of array variables
+	* Use an if conditional instead of case to check for DTS audio
+	  and to check which audio codec has been selected
+	* Support setting the paths to mplayer/ffmpeg/ffprobe in the
+	  config file
+	* Support setting the language metadata for subs copy
+	* Fixed a small issue in the subtitles code
+	
+2015-09-08 - ffhevc 1.8
+	* Enabled subs copy for other containers than mkv
+	* Some tweaks in the audio code
+	* Updated the README file
+	
+2015-09-07 - ffhevc 1.7
+	* Bugfix: the specified channels to decode wasn't honored due to missing
+	  'a' in the -ac option
+	* Added support for encoding to DTS audio
+	* Reduced some duplication in the audio code
+	* More cosmetics
+	* Updated the README file
+	  
+2015-09-06 - ffhevc 1.6
+	* Added support for setting the genre and year metadata
+	* Added support for virtually an unlimited amount of subtitles copy
+	* Colorized the banner
+	* Cosmetics
+	* Updated the README file
+	
+2015-09-06 - ffhevc 1.5
+	* Bugfix: dB was missing after the value of the audio volume filter
+	* Be a bit more consistant with the audio variables
+	* Added support for encoding to AAC audio
+	* Use eval instead of seq for the for audio loops as seq is Linux-specific
+	* Added an ASCII art banner
+	* Export encoding params to a shell script and source it for encoding
+	* Place the libx265 params in the config file for easy modifications
+	* Made auto-cropping optional. It can be disabled in the config file
+	* Made the SUBS var in the config file consistant with the ones that
+	  accept "y" or "n" as value
+	* Added support for specifying the audio language metadata
+	* Automatically add the title of the content based on provided output name
+	* Automatically add the audio codec name metadata
+	* Updated the README file
+	
+2015-09-05 - ffhevc 1.4
+	* Implemented support for virtually an unlimited audio track encodings
+	* Ask for AC-3 bitrate instead of setting it in the config file
+	* Updated the README file
+	
+2015-09-05 - ffhevc 1.3
+	* Added support for copying a single subtitle. Note that this is only
+	  supported when output container is set to MKV
+	* Changed var OUTPUT in the config file to OUTDIR. Also changed internal
+	  var OUT to OUTPUT
+	* Updated the README file
+	
+2015-09-04 - ffhevc 1.2
+	* Added a -v option to print the version
+	* Check for paths when user provides the output name
+	* Added a README file
+	
+2015-09-04 - ffhevc 1.1
+	* keyint should be 240 and not 24
+	* Simplify chapters and metadata copy options in the config file
+	* Added force-cfr=1 to the libx265 params to force constant frame rates
+	* Put config file location into a single var
+	
+2015-09-03 - ffhevc 1.0
+	* Initial public release
+

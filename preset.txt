@@ -1,0 +1,6 @@
+# Example of a custom preset file for ffhevc
+# Can be loaded with: ffhevc -c /path/to/this/file/preset.txt
+
+CRF="21"
+
+X265PARAMS="ref=4:me=star:bframes=6:rd=4:subme=4:merange=26:strong-intra-smoothing=0:ctu=64:sao=0:cu-lossless=0:cutree=1:rskip=1:max-merge=3:rc-lookahead=60:aq-mode=1:aq-strength=1.0:rdoq-level=1:psy-rdoq=1.5:psy-rd=2.5:limit-modes=1:limit-refs=1:limit-tu=1:rd-refine=0:deblock=-2,-2:weightb=1:weightp=1:rect=1:amp=0:wpp=1:pmode=0:pme=0:b-intra=1:b-adapt=2:b-pyramid=1:tskip-fast=0:fast-intra=0:early-skip=0:min-keyint=24:keyint=240:colormatrix=bt709:transfer=bt709:colorprim=bt709"

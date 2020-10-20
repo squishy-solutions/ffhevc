@@ -1,0 +1,129 @@
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" add new suboption
+.de IPs
+.IP "\\$1"
+..
+.TH ffhevc 1 "Oct 24, 2019"
+.SH NAME
+ffhevc
+
+.SH SYNOPSIS
+.B ffhevc
+[\-m <mode>] [\-p <preset>] [\-t <tune>] [\-b|\-v|\-e|\-r|\-h] [\-c <preset/config file>]
+.br
+
+.SH DESCRIPTION
+\fBffhevc\fR is a small yet quite capable shell script for encoding to the H.265/HEVC video
+format. It uses the FFmpeg encoder and the libx265 library. \fBffhevc\fR supports a wide range
+of options for video encoding coupled with support for encoding multiple audio tracks
+and copying multiple subtitles. \fBffhevc\fR only supports as input video files so it is
+not possible to encode directly from a DVD/BD drive or an ISO image.
+.LP
+The script uses a configuration file stored in $HOME/.ffhevc where the user can set things up.
+\fBffhevc\fR is interactive in nature but the user can pass through it in under a few minutes.
+
+.SH REQUIREMENTS
+- FFmpeg with libx265 support
+.br
+- FFprobe (part of FFmpeg)
+.br
+- MPlayer (for crop preview only)
+.br
+- MP4Box from GPAC (for mp4/mov cover art only)
+.br
+- bc
+
+.SH PARAMETERS
+.TP
+.B -m <mode>
+Specify a pass mode. If this option is not used, the script defaults to crf mode.
+Valid pass modes are:
+.RS
+.IPs
+.B 1p (1-pass mode)
+.br
+.B 2p (2-pass mode)
+.br
+.B 3p (3-pass mode)
+.br
+.B crf (constant rate factor mode)
+.RE
+.
+.TP
+.B -b
+Activate batch encoding mode. This mode is used to encode directories
+with video files in them.
+.TP
+.B -c /path/to/file/preset.txt
+Load a custom preset file. The package includes an example preset file.
+This option can also be used to load a custom configuration file instead
+of a preset.
+.TP
+.B -p <preset>
+Use a built-in x265 preset. You can choose from the following:
+.RS
+.IPs
+.B ultrafast
+.br
+.B superfast
+.br
+.B veryfast
+.br
+.B faster
+.br
+.B fast
+.br
+.B medium
+.br
+.B slow
+.br
+.B slower
+.br
+.B veryslow
+.br
+.B placebo
+.RE
+.
+.TP
+.B -t <tune>
+Use a built-in x265 tune profile. You can choose from the following:
+.RS
+.IPs
+.B psnr
+.br
+.B ssim
+.br
+.B grain
+.br
+.B fastdecode
+.br
+.B zerolatency
+.br
+.B animation
+.RE
+.
+.TP
+.B -e
+Edit the configuration file.
+.TP
+.B -r
+Reset the configuration file to its defaults.
+.TP
+.B -v
+Display version and exit.
+.TP
+.B -h
+Display internal help menu and exit.
+
+.SH SEE ALSO
+.B ffmpeg (1)
+
+.SH AUTHORS
+.B ffhevc
+was written by Grozdan Nikolov <neutrino8@gmail.com>
+
+.SH BUG REPORTS
+Please send all bug reports and/or questions/suggestions/donations to <neutrino8@gmail.com>
+
+.SH WWW
+https://ffhevc.teambelgium.net

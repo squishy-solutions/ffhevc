@@ -1,0 +1,58 @@
+[
+    {
+        "BezierCurveData": {
+            "Anchor0": 461,
+            "Anchor1": 584,
+            "Anchor10": 971,
+            "Anchor11": 989,
+            "Anchor12": 1002,
+            "Anchor13": 1011,
+            "Anchor2": 651,
+            "Anchor3": 708,
+            "Anchor4": 761,
+            "Anchor5": 808,
+            "Anchor6": 851,
+            "Anchor7": 888,
+            "Anchor8": 921,
+            "Anchor9": 949,
+            "KneePointX": 0,
+            "KneePointY": 0,
+            "NumberOfAnchors": 14
+        },
+        "LocalParameters": [
+        ],
+        "LuminanceParameters": {
+            "AverageRGB": 13925,
+            "MaxScl0": 39521,
+            "MaxScl1": 39521,
+            "MaxScl2": 39521,
+            "PercentileLuminance": {
+                "NumberOfPercentiles": 10,
+                "PercentileLuminance0": 0,
+                "PercentileLuminance1": 1,
+                "PercentileLuminance2": 2,
+                "PercentileLuminance3": 79,
+                "PercentileLuminance4": 2514,
+                "PercentileLuminance5": 39521,
+                "PercentileLuminance6": 39522,
+                "PercentileLuminance7": 39523,
+                "PercentileLuminance8": 39524,
+                "PercentileLuminance9": 39525,
+                "PercentilePercentage0": 1,
+                "PercentilePercentage1": 5,
+                "PercentilePercentage2": 10,
+                "PercentilePercentage3": 25,
+                "PercentilePercentage4": 50,
+                "PercentilePercentage5": 75,
+                "PercentilePercentage6": 90,
+                "PercentilePercentage7": 95,
+                "PercentilePercentage8": 98,
+                "PercentilePercentage9": 99
+            }
+        },
+        "NumberOfWindows": 1,
+        "SceneFrameIndex": 0,
+        "SceneId": 0,
+        "TargetedSystemDisplayMaximumLuminance": 400
+    }
+]
