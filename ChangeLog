@@ -1,3 +1,58 @@
+2021-04-25 - ffhevc 4.4.5
+	* Remove +frag_keyframe for the MP4 container. Doesn't
+	  make sense when used with +fasstart.
+	* Cosmetics: use HDR10 word when asking HDR questions
+
+2021-04-03 - ffhevc 4.4.4
+	* Fixed a small bug where the -colorspace option was
+	  not added for BT2020 content in case SMPTE2084/HLG
+	  was chosen as transfer
+	  
+2021-03-27 - ffhevc 4.4.3
+	* Remove hrd options for HDR encodes. They're not
+	  really needed
+	* Luma/Chroma Offset should be Optimization instead
+	
+2021-03-21 - ffhevc 4.4.2
+	* Fix a long-standing bug in the HDR code where
+	  the $hdr variable was used twice, once to check
+	  if HDR is selected and once to force signaling of
+	  HDR in case max-cll is 0,0. This resulted in an
+	  "y" being added after the specified max-cll value
+	* Renamed hdr_opt to hdr10_opt
+
+2021-02-16 - ffhevc 4.4.1
+	* Fix "too many arguments" error in the HEVC
+	  Level code
+
+2021-02-08 - ffhevc 4.4.0
+	* Support setting the Maximum Decoder Level
+
+2021-02-02 - ffhevc 4.3.9
+	* Replace the yadif deinterlacer with bwdif. It's
+	  faster and provides higher quality
+
+2021-01-22 - ffhevc 4.3.8
+	* Remove "a" from the -ac audio option
+	* Fix possible negative index in the audio option
+
+2020-12-28 - ffhevc 4.3.7
+	* Fix a bug in the $vidtrack variable
+
+2020-12-27 - ffhevc 4.3.6
+	* Fixed a long standing bug where audio mapping
+	  values were incorrect for audio metadata
+	  resulting in incomplete or wrong values
+
+2020-12-15 - ffhevc 4.3.5
+	* Tweaks to the default encoding options
+
+2020-11-10 - ffhevc 4.3.4
+	* Bump up psy-rd from 3.3 to 4.0
+	* Lower deblock strength to -4,-4
+	* Enable strong intra smoothing
+	* Lower rskip edge threshold to 2
+
 2020-10-05 - ffhevc 4.3.3
 	* Fixed an issue in default encoding option where
 	  using a CTU of 64 can cause visual distortion when

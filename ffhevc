@@ -2,8 +2,8 @@
 #
 # Small script to encode to H.265/HEVC video using FFmpeg and libx265.
 # Author: Grozdan "microchip" Nikolov <neutrino8@opensuse.org>
-# Version: 4.3.3
-# Date: 2020-10-05
+# Version: 4.4.5
+# Date: 2021-04-25
 #
 # ffhevc is free software ; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,10 +24,10 @@ green() { echo -e "\e[1;32m$1\e[0;39;49m"; }
 brown() { echo -e "\e[0;33m$1\e[0;39;49m"; }
 error() { echo -e "\e[1;31m$1\e[0;39;49m"; }
 
-version="4.3.3"
+version="4.4.5"
 
 CFG="$HOME/.ffhevc"
-cfgversion="76"
+cfgversion="80"
 
 genconfig_func() {
 cat<<EOF>>"$CFG"
@@ -123,7 +123,7 @@ LOG="n"
 # libx265 parameters. Modify, if needed,
 # to fit your needs
 # merange is calculated as: ctu size - 4(luma) - 2(chroma) (- 1 if me=hex is used)
-X265PARAMS="ref=4:hme=1:hme-search=umh,umh,star:bframes=8:rd=4:rd-refine=0:subme=4:qcomp=0.7:fades=1:strong-intra-smoothing=0:ctu=32:qg-size=32:sao=0:selective-sao=0:cu-lossless=0:cutree=1:tu-inter-depth=4:tu-intra-depth=4:rskip=2:rskip-edge-threshold=3:max-merge=2:rc-lookahead=80:aq-mode=1:aq-strength=1.0:rdoq-level=1:psy-rd=3.3:psy-rdoq=16.0:limit-modes=0:limit-refs=0:limit-tu=0:deblock=-3,-3:weightb=1:weightp=1:rect=1:amp=0:wpp=1:pmode=0:pme=0:b-intra=1:b-adapt=2:b-pyramid=1:tskip=1:tskip-fast=0:fast-intra=0:early-skip=0:min-keyint=24:keyint=240"
+X265PARAMS="ref=4:hme=1:hme-search=umh,umh,star:bframes=8:rd=4:rd-refine=0:subme=4:qcomp=0.7:fades=1:strong-intra-smoothing=1:ctu=32:qg-size=32:sao=0:selective-sao=0:cu-lossless=0:cutree=1:tu-inter-depth=4:tu-intra-depth=4:rskip=2:rskip-edge-threshold=2:max-merge=2:rc-lookahead=80:aq-mode=1:aq-strength=1.0:rdoq-level=1:psy-rd=4.0:psy-rdoq=15.0:limit-modes=0:limit-refs=0:limit-tu=0:deblock=-4,-4:weightb=1:weightp=1:rect=1:amp=0:wpp=1:pmode=0:pme=0:b-intra=1:b-adapt=2:b-pyramid=1:tskip=1:tskip-fast=0:fast-intra=0:early-skip=0:min-keyint=24:keyint=240"
 
 # Leave empty to auto-detect ffmpeg/ffprobe/mplayer
 # or set your custom ones (eg, /path/to/bin/ffmpeg)
@@ -439,7 +439,7 @@ check_container_func() {
 	CONFMT="$(echo "$CONFMT" | tr '[:upper:]' '[:lower:]')"
 	if [ ! -z "$CONFMT" ]; then
 		case "$CONFMT" in
-			mp4|mov)		movflags="-movflags +faststart+frag_keyframe+use_metadata_tags" ;;
+			mp4|mov)		movflags="-movflags +faststart+use_metadata_tags" ;;
 			m2ts|mts|ts)		bsf="-bsf:v:0 hevc_mp4toannexb" ;;
 			mkv)			true ;;
 			*)
@@ -504,6 +504,7 @@ else
 fi
 
 vidtrack="$(echo "$vidmap" | awk '{print $2}' | awk -F: '{print $2}')"
+test $vidtrack="-1" && vidtrack="0"
 
 if [ ! -z "$batchmode" ]; then
 	OUTPUT="$OUTDIR/$(basename $0)_$$"
@@ -724,6 +725,50 @@ if [ "$vbv" = "y" -o "$vbv" = "Y" ]; then
 	printf "Specify the VBV Buffer Size in kbps [default is 6000]: "
 	read vbv_buf
 	test -z "$vbv_buf" && vbv_bufsize=":vbv_bufsize=6000"; ffvbv_bufsize="-bufsize 6000k" || vbv_bufsize=":vbv_bufsize=$vbv_buf"; ffvbv_bufsize="-bufsize ${vbv_buf}k"
+fi
+
+printf "Set the Maximum Decoder Level? [y/N]: "
+read mdl
+if [ "$mdl" = "y" -o "$mdl" = "Y" ]; then
+	echo
+	brown "Decoder Levels"
+	brown "~~~~~~~~~~~~~~"
+	echo " 0 --> Level 1   (max bitrate: 128 kbps)"
+	echo " 1 --> Level 2   (max bitrate: 1,500 kbps)"
+	echo " 2 --> Level 2.1 (max bitrate: 3,000 kbps)"
+	echo " 3 --> Level 3   (max bitrate: 6,000 kbps)"
+	echo " 4 --> Level 3.1 (max bitrate: 10,000 kbps)"
+	echo " 5 --> Level 4   (max bitrate: 12,000 kbps)"
+	echo " 6 --> Level 4.1 (max bitrate: 20,000 kbps)"
+	echo " 7 --> Level 5   (max bitrate: 25,000 kbps)"
+	echo " 8 --> Level 5.1 (max bitrate: 40,000 kbps)"
+	echo " 9 --> Level 5.2 (max bitrate: 60,000 kbps)"
+	echo " 10 -> Level 6   (max bitrate: 60,000 kbps)"
+	echo " 11 -> Level 6.1 (max bitrate: 120,000 kbps)"
+	echo " 12 -> Level 6.2 (max bitrate: 240,000 kbps)"
+	echo
+	printf "Which Level to Use? [default is 5]: "
+	read uselevel
+	case "$uselevel" in
+		0)	dlevel="1.0" ;;
+		1)	dlevel="2.0" ;;
+		2)	dlevel="2.1" ;;
+		3)	dlevel="3.0" ;;
+		4)	dlevel="3.1" ;;
+		5|"")	dlevel="4.0" ;;
+		6)	dlevel="4.1" ;;
+		7)	dlevel="5.0" ;;
+		8)	dlevel="5.1" ;;
+		9)	dlevel="5.2" ;;
+		10)	dlevel="6.0" ;;
+		11)	dlevel="6.1" ;;
+		12)	dlevel="6.2" ;;
+		*)
+		error "-> Invalid option!"
+		exit 1
+		;;
+	esac
+	level_idc=":level-idc=$dlevel"
 fi
 
 video_denoise_func() {
@@ -963,8 +1008,8 @@ video_deinterlace_func() {
 				test -z "$par" && fpar="$defpar" || fpar="$par"
 			fi
 			case "$1" in
-				ofps)	test ! -z "$fpar" && deinterlace="yadif=1,mcdeint=mode=medium:parity=$fpar:qp=10,framestep=step=2," || deinterlace="yadif=0," ;;
-				bob)	test ! -z "$fpar" && deinterlace="yadif=1,mcdeint=mode=medium:parity=$fpar:qp=10," || deinterlace="yadif=1," ;;
+				ofps)	test ! -z "$fpar" && deinterlace="bwdif=mode=1,mcdeint=mode=medium:parity=$fpar:qp=10,framestep=step=2," || deinterlace="bwdif=mode=0," ;;
+				bob)	test ! -z "$fpar" && deinterlace="bwdif=mode=1,mcdeint=mode=medium:parity=$fpar:qp=10," || deinterlace="bwdif=mode=1," ;;
 			esac
 		}
 		echo
@@ -1564,14 +1609,14 @@ if [ "$HDR_SUPPORT" = "y" ]; then
 			fi
 		fi
 		
-		printf "Set HDR VUI Options? [y/N]: "
+		printf "Set HDR10 VUI Options? [y/N]: "
 		read hdr
 		if [ "$hdr" = "y" -o "$hdr" = "Y" ]; then
 			printf "Scan for HDR Side Data? [y/N]: "
 			read hdr_sd
 			if [ "$hdr_sd" = "y" -o "$hdr_sd" = "Y" ]; then
 				echo
-				green "-> Scanning for HDR Side Data..."
+				green "-> Scanning for HDR10 Side Data..."
 				HDRFILE="$OUTDIR/hdr_sd_$$"
 				$FFPROBE -i "$input" -v quiet -select_streams v:$vidtrack -show_entries side_data -read_intervals %+1 > "$HDRFILE"
 				
@@ -1592,20 +1637,20 @@ if [ "$HDR_SUPPORT" = "y" ]; then
 			printf "Specify the Content Light Level Info (max-cll) [press 'Enter' to skip]: "
 			read clli
 			test ! -z "$clli" && max_cll=":max-cll=$clli"
-			printf "Force signaling of HDR in case max-cll is 0,0? [y/N]: "
+			printf "Force signaling of HDR10 in case max-cll is 0,0? [y/N]: "
 			read fhdr
 			if [ "$fhdr" = "y" -o "$fhdr" = "Y" ]; then
-				hdr=":hdr10=1"
+				hdr10=":hdr10=1"
 			fi
 			printf "Flag the file as HLG (Hybrid Log Gamma)? [y/N]: "
 			read fhlg
 			if [ "$fhlg" = "y" -o "$fhlg" = "Y" ]; then
 				hlg=":pic-struct=0:atc-sei=18"
 			fi
-			printf "Add Luma/Chroma Offsets (hdr10-opt)? [y/N]: "
+			printf "Enable Luma/Chroma Optimization (hdr10-opt)? [y/N]: "
 			read lcoffset
 			if [ "$lcoffset" = "y" -o "$lcoffset" = "Y" ]; then
-				hdr_opt=":hdr10-opt=1"
+				hdr10_opt=":hdr10-opt=1"
 			fi
 		fi
 		
@@ -1626,11 +1671,11 @@ if [ "$HDR_SUPPORT" = "y" ]; then
 		fi
 		
 		if [ ! -z "$master_display" -o ! -z "$max_cll" -o ! -z "$dhdr10" -o ! -z "$dolby_vision" -o ! -z "$dolby_vision_rpu" ]; then
-			hdr_encopts=":open-gop=0:repeat-headers=1:hrd=1:vui-hrd-info=1$hlg"
+			hdr_encopts=":open-gop=0:repeat-headers=1$hlg"
 		fi
 		
 		if [ ! -z "$batchmode" ]; then
-			printf "Auto-Detect and Add HDR Side Data to All Encodes? [y/N]: "
+			printf "Auto-Detect and add HDR10 Side Data to All Encodes? [y/N]: "
 			read addhdr
 			if [ "$addhdr" = "y" -o "$addhdr" = "Y" ]; then
 				echo
@@ -1644,7 +1689,7 @@ if [ "$HDR_SUPPORT" = "y" ]; then
 					echo "        hdrsd[sd]=\"\$(grep \"^\${sdarray[sd]}\" \"\$HDRFILE\" | tail -1 | awk -F= '{print \$2}' | awk -F/ '{print \$1}')\""
 					echo "    done"
 					echo "    rm -f \"\$HDRFILE\""
-					echo "    hdr_encopts=\":open-gop=0:repeat-headers=1:hrd=1:vui-hrd-info=1\""
+					echo "    hdr_encopts=\":open-gop=0:repeat-headers=1\""
 					echo "    mast_disp=\"G(\${hdrsd[0]},\${hdrsd[1]})B(\${hdrsd[2]},\${hdrsd[3]})R(\${hdrsd[4]},\${hdrsd[5]})WP(\${hdrsd[6]},\${hdrsd[7]})L(\${hdrsd[9]},\${hdrsd[8]})\""
 					echo "    max_cll=\":max-cll=\${hdrsd[10]},\${hdrsd[11]}\""
 				}
@@ -1912,10 +1957,10 @@ if [ -z "$cspace" -a -z "$tonemap" ]; then
 			1)	matrix="smpte170m"; prim="smpte170m"; transfer="smpte170m"; coloroptions="-color_primaries smpte170m -color_trc smpte170m -colorspace smpte170m" ;;
 			2)	matrix="bt470bg"; prim="bt470bg"; transfer="bt470bg"; coloroptions="-color_primaries bt470bg -color_trc gamma28 -colorspace bt470bg" ;;
 			3)	matrix="bt709"; prim="bt709"; transfer="bt709"; coloroptions="-color_primaries bt709 -color_trc bt709 -colorspace bt709" ;;
-			4)	matrix="bt2020nc"; prim="bt2020"; transfer="bt2020-10"; coloroptions="-color_primaries bt2020 -color_trc bt2020_10bit -colorspace bt2020nc" ;;
-			5)	matrix="bt2020nc"; prim="bt2020"; transfer="bt2020-12"; coloroptions="-color_primaries bt2020 -color_trc bt2020_12bit -colorspace bt2020nc" ;;
-			6)	matrix="bt2020c"; prim="bt2020"; transfer="bt2020-10"; coloroptions="-color_primaries bt2020 -color_trc bt2020_10bit -colorspace bt2020c" ;;
-			7)	matrix="bt2020c"; prim="bt2020"; transfer="bt2020-12"; coloroptions="-color_primaries bt2020 -color_trc bt2020_12bit -colorspace bt2020c" ;;
+			4)	matrix="bt2020nc"; prim="bt2020"; transfer="bt2020-10"; coloroptions="-color_primaries bt2020 -colorspace bt2020nc -color_trc bt2020_10bit" ;;
+			5)	matrix="bt2020nc"; prim="bt2020"; transfer="bt2020-12"; coloroptions="-color_primaries bt2020 -colorspace bt2020nc -color_trc bt2020_12bit" ;;
+			6)	matrix="bt2020c"; prim="bt2020"; transfer="bt2020-10"; coloroptions="-color_primaries bt2020 -colorspace bt2020c -color_trc bt2020_10bit" ;;
+			7)	matrix="bt2020c"; prim="bt2020"; transfer="bt2020-12"; coloroptions="-color_primaries bt2020 -colorspace bt2020c -color_trc bt2020_12bit" ;;
 			8|"")	matrix="undef"; prim="undef"; transfer="undef" ;;
 			*)
 			error "-> Invalid option!"
@@ -2731,9 +2776,14 @@ if [ "$ATRACKS" != "0" ]; then
 				;;
 			esac
 		done
-		
-		aidx[i]="$(($(echo "${atrack[i]}" | awk -F: '{print $2}')-1))"
-		test "${aidx[i]}" = "-1" && aidx[i]="0"
+
+		gettrack="$(echo "${atrack[i]}" | awk -F: '{print $2}')"
+		if [ "$gettrack" -eq 1 ]; then
+			aidx[i]="0"
+		else
+			aidx[i]="$(($gettrack-1))"
+			test "${aidx[i]}" = "-1" && aidx[i]="0"
+		fi
 		
 		if [ "${acodec[i]}" != "copy" ]; then
 			case "${acodec[i]}" in
@@ -3468,7 +3518,7 @@ if [ "$ATRACKS" != "0" ]; then
 			fi
 			
 			audmeta[i]="-metadata:s:a:${audindex[i]} title=\"${acdcmeta[i]}${achmeta[i]}${abtrmeta[i]}${ahzmeta[i]}${abdmeta[i]}\""
-			audchan[i]="-ac:a:${audindex[i]} ${ach[i]} -channel_layout:a:${audindex[i]} \"${achlayout[i]}\""
+			audchan[i]="-ac:${audindex[i]} ${ach[i]} -channel_layout:a:${audindex[i]} \"${achlayout[i]}\""
 			
 			afilters[i]="$(echo "${aresample[i]}${anormalize[i]}${avolume[i]}$atempo" | sed 's|,$||')"
 			
@@ -3680,7 +3730,7 @@ vidfilters="$(echo "$deinterlace$detelecine$tonemap$crop$deblock$denoise$scale$n
 
 test ! -z "$vidfilters" && vfilters="-vf $vidfilters"
 
-test ! -z "$vpreset" && X265PARAMS="$colorprim$interlaced$dolby_vision$dolby_vision_rpu$master_display$max_cll$hdr$hdr_opt$dhdr10$hdr_encopts$min_keyint$max_keyint$chromaloc$vbv_maxrate$vbv_bufsize$dither $vpreset $vtune" || X265PARAMS=":$X265PARAMS$colorprim$interlaced$dolby_vision$dolby_vision_rpu$master_display$max_cll$hdr$hdr_opt$dhdr10$hdr_encopts$min_keyint$max_keyint$chromaloc$vbv_maxrate$vbv_bufsize$dither"
+test ! -z "$vpreset" && X265PARAMS="$colorprim$interlaced$dolby_vision$dolby_vision_rpu$master_display$max_cll$hdr10$hdr10_opt$dhdr10$hdr_encopts$min_keyint$max_keyint$chromaloc$vbv_maxrate$vbv_bufsize$dither$level_idc $vpreset $vtune" || X265PARAMS=":$X265PARAMS$colorprim$interlaced$dolby_vision$dolby_vision_rpu$master_display$max_cll$hdr10$hdr10_opt$dhdr10$hdr_encopts$min_keyint$max_keyint$chromaloc$vbv_maxrate$vbv_bufsize$dither$level_idc"
 
 test ! -z "$COMMENT" && METACOMMENT="-metadata comment=\"$COMMENT\""
 
@@ -3759,7 +3809,7 @@ if [ ! -z "$remuxcon" ]; then
 		echo "echo" >> "$OUTFILE"
 		echo "green \"-> Remuxing to $i...\"" >> "$OUTFILE"
 		case "$i" in
-			mp4|mov)	movflags2="-movflags +faststart+frag_keyframe+use_metadata_tags" ;;
+			mp4|mov)	movflags2="-movflags +faststart+use_metadata_tags" ;;
 			m2ts|ts|mts)	movflags2=""; vflags="-bsf:v:0 hevc_mp4toannexb" ;;
 			*)		movflags2=""; vflags="" ;;
 		esac
